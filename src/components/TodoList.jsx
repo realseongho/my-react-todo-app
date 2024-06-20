@@ -1,8 +1,16 @@
 import TodoItem from './TodoItem';
-function TodoList() {
+function TodoList({ todos, toggleCompleted, deleteTodo }) {
   return (
     <ul>
-      <TodoItem />
+      {todos.map((todo, index) => (
+        <TodoItem
+          key={index}
+          {...todo}
+          toggleCompleted={toggleCompleted}
+          deleteTodo={deleteTodo}
+          index={index}
+        />
+      ))}
     </ul>
   );
 }

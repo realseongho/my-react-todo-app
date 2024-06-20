@@ -1,14 +1,43 @@
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 
-function TodoItem() {
+function TodoItem({
+  title,
+  completed,
+  id,
+  toggleCompleted,
+  deleteTodo,
+  index,
+}) {
   return (
     <li className="flex justify-between items-center bg-gray-100 p-4 my-2 rounded-lg shadow-md">
-      <span className="flex-grow">리액트 공부하기</span>
+      <button
+        type="button"
+        onClick={() => {
+          toggleCompleted(id);
+        }}
+        className="p-2  bg-gray-100 text-black"
+      >
+        <span className={`flex-grow ${completed ? 'line-through' : ''}`}>
+          {title}
+        </span>
+      </button>
       <div className="flex space-x-2">
-        <button className="p-2 rounded-full shadow-md transition duration-300 bg-orange-500 hover:bg-orange-600 text-white">
+        <button
+          type="button"
+          onClick={() => {
+            deleteTodo(index);
+          }}
+          className="p-2 rounded-full shadow-md transition duration-300 bg-orange-500 hover:bg-orange-600 text-white"
+        >
           <FiEdit2 />
         </button>
-        <button className="p-2 rounded-full shadow-md transition duration-300 bg-red-500 hover:bg-red-600 text-white">
+        <button
+          type="button"
+          onClick={() => {
+            deleteTodo(index);
+          }}
+          className="p-2 rounded-full shadow-md transition duration-300 bg-red-500 hover:bg-red-600 text-white"
+        >
           <FiTrash2 />
         </button>
       </div>
