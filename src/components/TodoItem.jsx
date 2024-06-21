@@ -25,7 +25,7 @@ function TodoItem({
         <button
           type="button"
           onClick={() => {
-            deleteTodo(index);
+            editTodo(index);
           }}
           className="p-2 rounded-full shadow-md transition duration-300 bg-orange-500 hover:bg-orange-600 text-white"
         >

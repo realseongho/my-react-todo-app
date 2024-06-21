@@ -1,33 +1,41 @@
 import './App.css';
 import TodoInput from './components/TodoInput';
 import TodoList from './components/TodoList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function App() {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      completed: true,
-      title: '리액트 공부하기',
-    },
-    {
-      id: 2,
-      completed: false,
-      title: '인사하기',
-    },
-  ]);
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/todos')
+      .then((res) => {
+        console.log(res);
+        setTodos(res.data);
+      })
+      .catch((err) => {
+        console.error('Error occured on fetching', err);
+      });
+  }, []);
 
   function addTodo(todo) {
-    if (todo == '') return;
-    setTodos([
-      ...todos,
-      {
-        title: todo,
-        completed: false,
-        id: todos.length ? todos[todos.length - 1].id + 1 : 1,
-      },
-    ]);
+    if (todo === '') return;
+    const newTodo = {
+      title: todo,
+      completed: false,
+    };
+
+    axios
+      .post('http://localhost:3001/todos', newTodo)
+      .then((res) => {
+        setTodos([...todos, res.data]);
+      })
+      .catch((err) => {
+        console.log('Error occurred while adding todo:', err);
+      });
   }
+  //
   function toggleCompleted(id) {
     let tmp = todos.map((todo) => {
       if (todo.id === id) todo.completed = !todo.completed;
@@ -37,12 +45,21 @@ function App() {
   }
 
   function deleteTodo(index) {
-    let tmp = [...todos];
-    tmp.splice(index, 1);
-    setTodos(tmp);
+    const todoToDelete = todos[index];
+    if (!todoToDelete) return;
+
+    axios
+      .delete(`http://localhost:3001/todos/${todoToDelete.id}`)
+      .then((res) => {
+        const updatedTodos = todos.filter((todo) => todo.id != res.data.id);
+        setTodos(updatedTodos);
+      })
+      .catch((err) => {
+        console.log('Error occurred while deleting todo:', err);
+      });
   }
 
-  //console.log(...todos);
+  function editTodo(title) {}
   return (
     <div className="bg-blue-200 min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
